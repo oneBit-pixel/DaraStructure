@@ -3,6 +3,35 @@ package linkedlist;
 public class DoubleLinkList {
     public static void main(String[] args) {
         //测试代码
+        System.out.println("双线链表的测试");
+        //先创建节点
+        HeroNode2 hero1 = new HeroNode2(1, "宋江", "及时雨");
+        HeroNode2 hero2 = new HeroNode2(3, "卢俊义", "玉麒麟");
+        HeroNode2 hero3 = new HeroNode2(5, "吴用", "智多星");
+        HeroNode2 hero4 = new HeroNode2(8, "林冲", "豹子头");
+        //创建一个双线链表对象
+        DoubleLinkedList doubleLinkedList =new DoubleLinkedList();
+        doubleLinkedList.add(hero1);
+        doubleLinkedList.add(hero2);
+        doubleLinkedList.add(hero3);
+        doubleLinkedList.add(hero4);
+
+        doubleLinkedList.list();
+
+        //修改
+        HeroNode2 newHeroNode = new HeroNode2(8, "公孙圣", "入云龙");
+        doubleLinkedList.update(newHeroNode);
+        System.out.println("修改后的链表情况");
+        doubleLinkedList.list();
+        //删除
+        doubleLinkedList.del(3);
+        System.out.println("删除后的链表情况");
+        doubleLinkedList.list();
+        //按顺序添加
+        HeroNode2 orderHerNode = new HeroNode2(2, "公孙圣", "入云龙");
+        doubleLinkedList.addByOrder(orderHerNode);
+        System.out.println("顺序添加的链表情况");
+        doubleLinkedList.list();
     }
 
 
@@ -17,6 +46,28 @@ class DoubleLinkedList {
     //返回头节点
     public HeroNode2 getHead() {
         return head;
+    }
+
+    //顺序添加
+    public void addByOrder(HeroNode2 heroNode){
+        HeroNode2 temp=head;
+        while (true){
+            if (temp.next==null){
+                //说明temp已经在链表最后
+                break;
+            }
+            if (temp.next.no> heroNode.no) {
+                heroNode.next=temp.next;
+                temp.next=heroNode;
+                heroNode.pre=temp;
+                break;
+            }else if (temp.no==temp.next.no){
+                System.out.println("该序号已经存在,无法天机");
+                break;
+            }
+            temp=temp.next;//后移
+        }
+
     }
 
     //添加一个节点 到双向链表的最后
