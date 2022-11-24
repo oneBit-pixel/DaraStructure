@@ -357,9 +357,6 @@ class HeroNode {
         this.nickname = hNickname;
     }
 
-
-
-
     @Override
     public String toString() {
         return "HeroNode{" +
