@@ -1,15 +1,43 @@
 package tree;
 
+import java.util.Arrays;
+
 public class HeapSort {
     public static void main(String[] args) {
         //要求将数组进行升序排序
         int arr[] = {4, 6, 8, 5, 9};
 
+        heapSort(arr);
     }
 
     //编写一个堆排序的方法
     public static void heapSort(int arr[]) {
+        int temp = 0;
         System.out.println("堆排序！！");
+
+        //分步完成
+//        adjustHeap(arr, 1, arr.length);
+//        System.out.println("第一次" + Arrays.toString(arr));//4,9,8,5,6
+//
+//        adjustHeap(arr, 0, arr.length);
+//        System.out.println("第二次" + Arrays.toString(arr));//9，6，8，5，4
+
+        //完成最终代码
+        for (int i = arr.length / 2 - 1; i >= 0; i--) {
+            adjustHeap(arr, i, arr.length);
+        }
+
+        System.out.println("大顶堆构建完毕="+Arrays.toString(arr));
+        for (int j =arr.length-1;j>0;j--){
+            //交换
+            temp=arr[j];
+            arr[j]=arr[0];
+            arr[0]=temp;
+            adjustHeap(arr,0,j);
+            System.out.println("第"+j+"次="+Arrays.toString(arr));
+        }
+
+        System.out.println("数组=" + Arrays.toString(arr));
     }
 
     //将一个数组（二叉树），调整成一个大顶堆
@@ -37,12 +65,12 @@ public class HeapSort {
             if (arr[k] > temp) {//如果子结点大于父结点
                 arr[i] = arr[k];//把较大的值赋给当前的结点
                 i = k;//！！！ i指向k,继续循环比较
-            }else {
+            } else {
                 break;//
             }
         }
 
         //当for循环结束后，我们已经将以i 为父结点的树的最大值，放在了最顶上（局部）
-        arr[i]=temp;//将temp放到调整后的位置
+        arr[i] = temp;//将temp放到调整后的位置
     }
 }
