@@ -1,45 +1,36 @@
-package binarySortTree;
+package avl;
 
-public class BinarySortTreeDemo {
+
+public class AVLTreeDemo {
+
     public static void main(String[] args) {
-        int arr[] = {7, 3, 10, 12, 5, 1, 9, 0};
-        BinarySortTree binarySortTree = new BinarySortTree();
-        //循环添加结点到二叉排序树
+//        int[] arr = {4, 3, 6, 5, 7, 8};
+//        int[] arr = {10, 12, 8, 9, 7, 6};
+        int[] arr={10,11,7,6,8,9};
+
+        //创建一个AVLTree对象
+        AVLTree avtTree = new AVLTree();
+        //添加结点
         for (int i = 0; i < arr.length; i++) {
-            binarySortTree.add(new Node(arr[i]));
+            avtTree.add(new Node(arr[i]));
         }
+        //遍历
+        System.out.println("中序遍历");
+        avtTree.infixOrder();
 
-        //中序遍历二叉排序树
-        System.out.println("中序遍历二叉排序树");
-        binarySortTree.infixOrder();
+        System.out.println("在没有做平衡处理之前~~~");
+        System.out.println("树的高度==>" + avtTree.getRoot().height());
+        System.out.println("左子树的高度==>" + avtTree.getRoot().leftHeight());
+        System.out.println("右子树树的高度==>" + avtTree.getRoot().rightHeight());
 
-//        //测试一下删除叶子节点
-//        binarySortTree.delNode(1);
-        binarySortTree.delNode(2);
-        binarySortTree.delNode(5);
-        binarySortTree.delNode(9);
-        binarySortTree.delNode(12);
-        binarySortTree.delNode(7);
-        binarySortTree.delNode(3);
-        binarySortTree.delNode(10);
-        binarySortTree.delNode(1);
-        binarySortTree.delNode(0);
-//        binarySortTree.delNode(10);
-//        System.out.println("删除结点后");
-//        binarySortTree.infixOrder();
-
-        System.out.println("root==>" + binarySortTree.getRoot());
-
-        System.out.println("删除结点后");
-        binarySortTree.infixOrder();
 
     }
 
 
 }
 
-//创建二叉排序树
-class BinarySortTree {
+//创建AVL Tree
+class AVLTree {
     private Node root;
 
     public Node getRoot() {
@@ -168,7 +159,6 @@ class BinarySortTree {
     }
 }
 
-//创建Node结点
 
 class Node {
     int value;
@@ -177,6 +167,54 @@ class Node {
 
     public Node(int value) {
         this.value = value;
+    }
+
+    //返回左子树的高度
+    public int leftHeight() {
+        if (left == null) {
+            return 0;
+        }
+        return left.height();
+    }
+
+    //返回右子树的高度
+    public int rightHeight() {
+        if (right == null) {
+            return 0;
+        }
+        return right.height();
+    }
+
+    //左旋转方法
+    private void leftRotate() {
+        //创建新的结点,以当前根结点的值
+        Node newNode = new Node(value);
+        //把新的结点左子树设置成当前结点的左子树
+        newNode.left = left;
+        //把新的结点的右子树设置成当前结点右子树的左子树
+        newNode.right = right.left;
+        //把当前结点的值替换成右子结点的值
+        value = right.value;
+        //把当前结点的右子树设置成右子树的右子树
+        right = right.right;
+        //把当前结点的左子树（左子节点）设置成新的结点
+        left = newNode;
+
+    }
+
+    //右旋转
+    private void rightRotate() {
+        Node newNode = new Node(value);
+        newNode.right = right;
+        newNode.left = left.right;
+        value = left.value;
+        left = left.left;
+        right = newNode;
+    }
+
+    //返回当前结点的高度,以该结点为根结点的树的高度
+    public int height() {
+        return Math.max(left == null ? 0 : left.height(), right == null ? 0 : right.height()) + 1;
     }
 
     //查找要删除的节点
@@ -256,7 +294,38 @@ class Node {
                 this.right.add(node);
             }
         }
+
+        //当添加玩一个结点后，如果：（右子树的高度-左子树的高度)>1.左旋转
+        if (rightHeight() - leftHeight() > 1) {
+            //如果它的右子树的左子树的高度大于它的右子树的右子树的高度
+            if (right != null && right.leftHeight()>right.rightHeight()) {
+                //先对右子节点进行右旋转
+                right.rightRotate();
+                //然后在对当前结点进行右旋转
+                leftRotate();//左旋转
+
+            }else {
+                //先对右子节点
+                leftRotate();//左旋转
+            }
+            return;//必须要
+        }
+
+        //当添加完一个结点后,如果（左子树的高度 - 右子树的高度)>1 ,右旋转
+        if (leftHeight() - rightHeight() > 1) {
+            //如果它的左子树的右子树大于它的左子树的高度
+            if (left != null && left.rightHeight()>left.leftHeight()) {
+                //先对当前结点的左结点（左子树） -> 左旋转
+                left.leftRotate();
+                //再对当前结点进行右旋转
+                rightRotate();//右旋转
+            }else {
+                //直接进行右旋转即可
+                rightRotate();//右旋转
+            }
+        }
     }
+
 
     //中序遍历
     public void infixOrder() {
